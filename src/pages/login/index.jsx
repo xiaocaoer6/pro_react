@@ -10,6 +10,18 @@ const Login = () => {
     console.log('Received values of form: ', values);
   };
 
+  const psdValidate = (rule, value) => {
+    if (!value ) {
+      return Promise.reject('请输入密码！');
+    }else if (value.length < 4 || value.length > 12 ){
+      return Promise.reject('密码要求4-12位');
+    }else if(!/^\w+$/.test(value)) {
+      return Promise.reject('必须是英文字母、数字、下划线组成');
+    }else {
+      return Promise.resolve()
+    }
+  }
+
   return (
     <div className="login-wrap">
       <div className="header">
@@ -28,22 +40,16 @@ const Login = () => {
           <Form.Item
             name="username"
             rules={[
-              {
-                required: true,
-                message: '请输入用户名！',
-              },
+              { required: true,message: '请输入用户名！',},
+              { min: 4, message: "必须大于等于四位"},
+              { pattern: /^\w+$/, message: "必须是英文字母、数字、下划线组成"},
             ]}
           >
             <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="用户名" />
           </Form.Item>
           <Form.Item
             name="password"
-            rules={[
-              {
-                required: true,
-                message: '请输入密码！',
-              },
-            ]}
+            rules={[{ validator: psdValidate }]}
           >
             <Input
               prefix={<LockOutlined className="site-form-item-icon" />}
